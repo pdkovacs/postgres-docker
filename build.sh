@@ -57,6 +57,7 @@ do_build() {
         --build-arg PG_DB_OWNER_NAME=$PG_DB_OWNER_NAME \
         --build-arg PG_DB_OWNER_PASSWORD=$(< /dev/urandom tr -dc _A-Z-a-z-0-9 | head -c${1:-32};) \
         --build-arg PG_DB_NAME=$PG_DB_NAME \
+        --build-arg PG_LOG_STATEMENTS=$PG_LOG_STATEMENTS \
         -t $DOCKER_IMAGE_NAME .
     set +x
     print_help

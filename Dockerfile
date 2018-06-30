@@ -5,6 +5,7 @@ ARG PG_CLUSTER_OWNER_GROUPID
 ARG PG_DB_OWNER_NAME
 ARG PG_DB_OWNER_PASSWORD
 ARG PG_DB_NAME
+ARG PG_LOG_STATEMENTS
 
 RUN apt-get update && apt-get install -y gnupg2
 
@@ -47,8 +48,9 @@ RUN /etc/init.d/postgresql start &&\
 
 RUN echo "host all  all    0.0.0.0/0  md5" >> /etc/postgresql/10/main/pg_hba.conf
 RUN echo "listen_addresses='*'" >> /etc/postgresql/10/main/postgresql.conf
-RUN test "$PG_LOG_STATEMENTS" = "yes" && echo "log_statement=all" >> /etc/postgresql/10/main/postgresql.conf
-
+RUN test "$PG_LOG_STATEMENTS" = "yes" && \
+            echo "log_statement=all" >> /etc/postgresql/10/main/postgresql.conf || \
+            echo "statements not logged"
 EXPOSE 5432
 
 # Add VOLUMEs to allow backup of config, logs and databases

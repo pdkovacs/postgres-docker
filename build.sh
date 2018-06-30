@@ -9,6 +9,9 @@
 ##############################################################################
 
 set_variables() {
+
+    test -f $(dirname $0)/config.sh && . config.sh 
+
     if [ -z "$PG_CLUSTER_OWNER" ];
     then
         echo "PG_CLUSTER_OWNER must be set"
@@ -58,9 +61,9 @@ do_build() {
     set +x
     print_help
 }
-
+set -x
 set_variables
-
+set +x
 case $1 in
     --help)
         print_help

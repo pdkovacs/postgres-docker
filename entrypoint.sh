@@ -7,6 +7,7 @@ Accepted arguments:
    --pg-cluster-owner-userid <string>
    --pg-cluster-owner-groupid <string>
    --pg-db-owner-name <string>
+   --pg-db-owner-password <string>
    --pg-db-name <string>
    --pg-log-statements
 
@@ -28,6 +29,10 @@ parse_arguments() {
             --pg-db-owner-name)
                 shift
                 pg_db_owner_name=$1
+                ;;
+            --pg-db-owner-password)
+                shift
+                pg_db_owner_password=$1
                 ;;
             --pg-db-name)
                 shift
@@ -101,7 +106,7 @@ setup_cluster_and_db() {
     echo "start_init_db_cmd: $start_init_db_cmd"
     set -xe
     su pgc-owner -c "/etc/init.d/postgresql start"
-    pg_db_owner_password=$(< /dev/urandom tr -dc _A-Z-a-z-0-9 | head -c${1:-32};)
+    pg_db_owner_password=${pg_db_owner_password:-$(< /dev/urandom tr -dc _A-Z-a-z-0-9 | head -c${1:-32};)}
     echo "pg_db_owner_password: $pg_db_owner_password"
     su pgc-owner -c "psql --command \"CREATE USER $pg_db_owner_name WITH SUPERUSER PASSWORD '$pg_db_owner_password';\" postgres"
     su pgc-owner -c "createdb -O $pg_db_owner_name $pg_db_name"

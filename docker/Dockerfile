@@ -1,6 +1,6 @@
 FROM ubuntu:bionic
 
-RUN apt-get update && apt-get install -y gnupg2
+RUN apt-get update && apt-get upgrade -y && apt-get install -y gnupg2
 
 # Add the PostgreSQL PGP key to verify their Debian packages.
 # It should be the same key as https://www.postgresql.org/media/keys/ACCC4CF8.asc
